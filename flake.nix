@@ -76,8 +76,8 @@
     in {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
-      nixosConfigurations.nixos-ocg = mkNixosConfiguration {
-        hostname = "nixos-ocg";
+      nixosConfigurations.cradix = mkNixosConfiguration {
+        hostname = "cradix";
         username = "paz";
         modules = [
           nixos-wsl.nixosModules.wsl

@@ -78,7 +78,7 @@
 
       nixosConfigurations.nixos-ocg = mkNixosConfiguration {
         hostname = "nixos-ocg";
-        username = "zadorski";
+        username = "paz";
         modules = [
           nixos-wsl.nixosModules.wsl
           ./wsl.nix

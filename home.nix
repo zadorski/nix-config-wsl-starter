@@ -1,13 +1,10 @@
 {
-  # FIXME: uncomment the next line if you want to reference your GitHub/GitLab access tokens and other secrets
-  # secrets,
   pkgs,
   username,
   nix-index-database,
   ...
 }: let
-  unstable-packages = with pkgs.unstable; [
-    # FIXME: select your core binaries that you always want on the bleeding-edge
+  unstable-packages = with pkgs.unstable; [ # select your core binaries that you always want on the bleeding-edge    
     bat
     bottom
     coreutils
@@ -33,36 +30,25 @@
     zip
   ];
 
-  stable-packages = with pkgs; [
-    # FIXME: customize these stable packages to your liking for the languages that you use
-
-    # FIXME: you can add plugins, change keymaps etc using (jeezyvim.nixvimExtend {})
-    # https://github.com/LGUG2Z/JeezyVim#extending
-    jeezyvim
-
+  stable-packages = with pkgs; [ # customize these stable packages to your liking for the languages that you use
+    jeezyvim # you can add plugins, change keymaps etc using (jeezyvim.nixvimExtend {}) # https://github.com/LGUG2Z/JeezyVim#extending
     # key tools
     gh # for bootstrapping
     just
-
     # core languages
     rustup
-
     # rust stuff
     cargo-cache
     cargo-expand
-
     # local dev stuf
     mkcert
     httpie
-
     # treesitter
     tree-sitter
-
     # language servers
     nodePackages.vscode-langservers-extracted # html, css, json, eslint
     nodePackages.yaml-language-server
     nil # nix
-
     # formatters and linters
     alejandra # nix
     deadnix # nix
@@ -76,26 +62,21 @@ in {
     nix-index-database.hmModules.nix-index
   ];
 
-  home.stateVersion = "22.11";
+  home.stateVersion = "24.05";
 
   home = {
     username = "${username}";
     homeDirectory = "/home/${username}";
 
-    sessionVariables.EDITOR = "nvim";
-    # FIXME: set your preferred $SHELL
-    sessionVariables.SHELL = "/etc/profiles/per-user/${username}/bin/fish";
+    sessionVariables.EDITOR = "nvim";    
+    sessionVariables.SHELL = "/etc/profiles/per-user/${username}/bin/fish"; # set your preferred $SHELL
   };
 
   home.packages =
     stable-packages
     ++ unstable-packages
-    ++
-    # FIXME: you can add anything else that doesn't fit into the above two lists in here
-    [
-      # pkgs.some-package
-      # pkgs.unstable.some-other-package
-    ];
+    ++    
+    []; # you can add anything else that doesn't fit into the above two lists in here (e.g. pkgs.unstable.some-other-package)
 
   programs = {
     home-manager.enable = true;
@@ -103,7 +84,7 @@ in {
     nix-index.enableFishIntegration = true;
     nix-index-database.comma.enable = true;
 
-    # FIXME: disable this if you don't want to use the starship prompt
+    # disable this if you don't want to use the starship prompt
     starship.enable = true;
     starship.settings = {
       aws.disabled = true;
@@ -119,7 +100,7 @@ in {
       hostname.style = "bold green";
     };
 
-    # FIXME: disable whatever you don't want
+    # disable whatever you don't want
     fzf.enable = true;
     fzf.enableFishIntegration = true;
     lsd.enable = true;
@@ -141,10 +122,9 @@ in {
         side-by-side = true;
         navigate = true;
       };
-      userEmail = ""; # FIXME: set your git email
+      userEmail = ""; #FIXME: set your git email
       userName = ""; #FIXME: set your git username
       extraConfig = {
-        # FIXME: uncomment the next lines if you want to be able to clone private https repos
         # url = {
         #   "https://oauth2:${secrets.github_token}@github.com" = {
         #     insteadOf = "https://github.com";
@@ -166,11 +146,15 @@ in {
       };
     };
 
-    # FIXME: This is my fish config - you can fiddle with it if you want
+    # fish config: fiddle with it if you want
     fish = {
       enable = true;
-      # FIXME: run 'scoop install win32yank' on Windows, then add this line with your Windows username to the bottom of interactiveShellInit
-      # fish_add_path --append /mnt/c/Users/<Your Windows Username>/scoop/apps/win32yank/0.1.1
+      # add path with your Windows username to the bottom of interactiveShellInit,
+      # either run 'scoop install win32yank' or run 'winget install win32yank' on Windows, 
+      # note that programs installed with `winget` are only symlinked to `%AppData%/Local/Microsoft/WinGet/Links`
+      # if "Developer Mode" is enabled or if the command is run from an admin shell.
+      # source:: https://github.com/microsoft/winget-cli/issues/3498
+      #fish_add_path --append /mnt/c/Users/[my-user]/AppData/Local/Microsoft/WinGet/Links #FIXME: <Your Windows Username>
       interactiveShellInit = ''
         ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
 
@@ -182,7 +166,7 @@ in {
           }
           + "/extras/kanagawa.fish")}
 
-        set -U fish_greeting
+        set -U fish_greeting        
       '';
       functions = {
         refresh = "source $HOME/.config/fish/config.fish";
@@ -229,10 +213,7 @@ in {
         pbcopy = "/mnt/c/Windows/System32/clip.exe";
         pbpaste = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'";
         explorer = "/mnt/c/Windows/explorer.exe";
-        
-        # To use code as the command, uncomment the line below. Be sure to replace [my-user] with your username. 
-        # If your code binary is located elsewhere, adjust the path as needed.
-        # code = "/mnt/c/Users/[my-user]/AppData/Local/Programs/'Microsoft VS Code'/bin/code";
+        #code = "/mnt/c/Users/[my-user]/AppData/Local/Programs/'Microsoft VS Code'/bin/code"; #FIXME
       };
       plugins = [
         {

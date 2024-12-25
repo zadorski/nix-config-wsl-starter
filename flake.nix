@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration";
+  description = "NixOS WSL configuration";
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
   inputs.nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -16,19 +16,15 @@
   inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.jeezyvim.url = "github:LGUG2Z/JeezyVim";
-
+  
   outputs = inputs:
     with inputs; let
-      secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");
-
       nixpkgsWithOverlays = system: (import nixpkgs rec {
         inherit system;
 
         config = {
           allowUnfree = true;
-          permittedInsecurePackages = [
-            # FIXME:: add any insecure packages you absolutely need here
-          ];
+          permittedInsecurePackages = []; # add any insecure packages you absolutely need here
         };
 
         overlays = [
@@ -81,8 +77,8 @@
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
       nixosConfigurations.nixos = mkNixosConfiguration {
-        hostname = "nixos";
-        username = "nixos"; # FIXME: replace with your own username!
+        hostname = "nixos-ocg";
+        username = "zadorski";
         modules = [
           nixos-wsl.nixosModules.wsl
           ./wsl.nix

@@ -48,7 +48,7 @@
       };
 
       argDefaults = {
-        inherit secrets inputs self nix-index-database;
+        inherit inputs self nix-index-database; #inherit secrets inputs self nix-index-database;
         channels = {
           inherit nixpkgs nixpkgs-unstable;
         };

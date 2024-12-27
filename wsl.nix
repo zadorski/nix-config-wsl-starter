@@ -17,7 +17,29 @@
 
   security.sudo.wheelNeedsPassword = false;
   
-  # services.openssh.enable = true; # uncomment to enable SSH
+  services.openssh = {
+      enable = true;
+      
+      # https://github.com/hlissner/dotfiles/blob/531e90f4e5e27a13f23ad2d8adf2f2f57aa0c08a/modules/services/ssh.nix#L31  
+      #settings = {
+      #  KbdInteractiveAuthentication = false;
+      #  # require keys over passwords (ensure target machines are provisioned with authorizedKeys)
+      #  PasswordAuthentication = false;
+      #};
+      # suppress superfluous TCP traffic on new connections (undo if using SSSD)
+      #extraConfig = ''GSSAPIAuthentication no'';
+      
+      # removes the default RSA key (not that it represents a vulnerability, per se, but is one less key 
+      # (that I don't plan to use) to the castle laying around) and ensures the ed25519 key is generated 
+      # with 100 rounds, rather than the default (16), to improve its entropy
+      hostKeys = [
+        {
+          comment = "${hostname}.local"; #"${config.networking.hostName}.local";
+          path = "/etc/ssh/ssh_host_ed25519_key";
+          rounds = 100;
+          type = "ed25519";
+        }
+      ];
 
   users.users.${username} = {
     isNormalUser = true;

@@ -1,0 +1,7 @@
+keys:
+  - &paz age1khrvffglcrt27x49rk338a23pxmq7pavmmydfyj5sqpj3jglfe9se7vhkr
+creation_rules:
+  - path_regex: secrets.yaml
+    key_groups:
+    - age:
+      - *paz

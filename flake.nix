@@ -16,7 +16,7 @@
   inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.jeezyvim.url = "github:LGUG2Z/JeezyVim";
-  
+
   # https://unmovedcentre.com/posts/secrets-management/
   inputs.sops-nix.url = "github:mic92/sops-nix";
   inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -87,6 +87,7 @@
         username = "paz";
         modules = [
           nixos-wsl.nixosModules.wsl
+          sops-nix.nixosModules.sops
           ./wsl.nix
         ];
       };

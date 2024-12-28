@@ -9,6 +9,24 @@
 
   networking.hostName = "${hostname}";
 
+  # https://unmovedcentre.com/posts/secrets-management/
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    validateSopsFiles = false;
+    age = {
+      # automatically import host SSH keys as age keys
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      # this will use an age key that is expected to already be in the filesystem
+      keyFile = "/var/lib/sops-nix/key.txt";
+      # generate a new key if the specified above does not exist
+      generateKey = true;
+    };
+    # secrets will be output to /run/secrets
+    secrets = {
+      paz-user = {};
+    };
+  };
+    
   programs.fish.enable = true; # change your shell here if you don't want fish  
   environment.pathsToLink = ["/share/fish"];
   environment.shells = [pkgs.fish];

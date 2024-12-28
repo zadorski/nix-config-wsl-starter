@@ -2,6 +2,7 @@
   pkgs,
   username,
   nix-index-database,
+  inputs,
   ...
 }: let
   secretspath = builtins.toString inputs.nix-secrets;

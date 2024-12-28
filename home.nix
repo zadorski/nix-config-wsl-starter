@@ -118,11 +118,6 @@ in {
       "git" = {
         host = "github.com";
         user = "git";
-        forwardAgent = true;
-        identitiesOnly = true;
-        identityFile = [
-          "~/.ssh/id_maco"
-        ];
       };
     };
     

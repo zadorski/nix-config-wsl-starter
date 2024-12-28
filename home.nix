@@ -2,10 +2,9 @@
   pkgs,
   username,
   nix-index-database,
-  inputs,
   ...
 }: let
-  secretspath = builtins.toString inputs.nix-secrets;
+  secretspath = builtins.toString nix-secrets;
   unstable-packages = with pkgs.unstable; [ # select your core binaries that you always want on the bleeding-edge    
     bat
     bottom
@@ -62,7 +61,7 @@
 in {
   imports = [
     nix-index-database.hmModules.nix-index
-    inputs.sops-nix.homeManagerModules.sops
+    sops-nix.homeManagerModules.sops
   ];
 
   home.stateVersion = "24.05";

@@ -20,8 +20,8 @@
   # https://unmovedcentre.com/posts/secrets-management/
   inputs.sops-nix.url = "github:mic92/sops-nix";
   inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-  #inputs.nix-secrets.url = "git+ssh://git@github.com/zadorski/nix-secrets.git?shallow=1";  
-  #inputs.nix-secrets.flake = false;
+  inputs.nix-secrets.url = "git+ssh://git@github.com/zadorski/nix-secrets.git?ref=main&shallow=1";  
+  inputs.nix-secrets.flake = false;
 
   outputs = inputs:
     with inputs; let

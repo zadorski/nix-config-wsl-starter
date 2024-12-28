@@ -4,14 +4,16 @@
   pkgs,
   inputs,
   ...
-}: {
+}: let 
+  secretspath = builtins.toString inputs.nix-secrets;
+in {
   time.timeZone = "Europe/Berlin"; # lookup allowed values via "timedatectl list-timezones"
 
   networking.hostName = "${hostname}";
 
   # https://unmovedcentre.com/posts/secrets-management/
   sops = {
-    defaultSopsFile = ./secrets.yaml;
+    defaultSopsFile = "${secretspath}/secrets.yaml"; #./secrets.yaml;
     validateSopsFiles = false;
     age = {
       # automatically import host SSH keys as age keys

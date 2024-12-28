@@ -113,6 +113,19 @@ in {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
 
+    ssh = {
+      enable = true;
+      matchBlocks = {
+        "accessPrivateRepo" = {
+          host = "github.com gitlab.com";
+          identitiesOnly = true;
+          identityFile = [
+            "~/.ssh/id_maco"
+          ];
+        };
+      };
+    };
+
     git = {
       enable = true;
       package = pkgs.unstable.git;

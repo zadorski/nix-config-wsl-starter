@@ -60,7 +60,7 @@
 in {
   imports = [
     nix-index-database.hmModules.nix-index
-    sops-nix.homeManagerModules.sops
+    #sops-nix.homeManagerModules.sops
   ];
 
   home.stateVersion = "24.05";

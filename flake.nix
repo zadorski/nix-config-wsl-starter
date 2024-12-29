@@ -101,7 +101,7 @@
           ++ modules;
       };
   in {
-    formatter.forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
     nixosConfigurations.cradix = mkNixosConfiguration {
       hostname = "cradix";

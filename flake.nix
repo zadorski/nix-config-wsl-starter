@@ -15,81 +15,103 @@
   inputs.nix-index-database.url = "github:Mic92/nix-index-database";
   inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs.jeezyvim.url = "github:LGUG2Z/JeezyVim";
+  #inputs.jeezyvim.url = "github:LGUG2Z/JeezyVim";
 
   # https://unmovedcentre.com/posts/secrets-management/
   inputs.sops-nix.url = "github:mic92/sops-nix";
   inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   inputs.nix-secrets.url = "git+ssh://git@github.com/zadorski/nix-secrets.git?ref=main&shallow=1";  
-  inputs.nix-secrets.flake = false;
+  inputs.nix-secrets.inputs = { };
 
-  outputs = inputs:
-    with inputs; let
-      nixpkgsWithOverlays = system: (import nixpkgs rec {
-        inherit system;
+  # https://github.com/ruslanguns/nixos-wsl-starter/blob/master/flake.nix
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-unstable,
+    nix-index-database,
+    home-manager,
+    nur,
+    ...
+  }@inputs: let
+  
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = []; # add any insecure packages you absolutely need here
+    };
+      
+    systems = [
+      "x86_64-linux"
+      #"x86_64-darwin"
+      #"aarch64-linux"
+    ];
 
-        config = {
-          allowUnfree = true;
-          permittedInsecurePackages = []; # add any insecure packages you absolutely need here
-        };
+    forAllSystems = nixpkgs.lib.getAttr systems;
 
-        overlays = [
-          nur.overlay
-          jeezyvim.overlays.default
+    nixpkgsWithOverlays = system: import nixpkgs {
+      inherit system config;
 
-          (_final: prev: {
-            unstable = import nixpkgs-unstable {
-              inherit (prev) system;
-              inherit config;
-            };
-          })
-        ];
-      });
+      overlays = [
+        nur.overlay
+        #jeezyvim.overlays.default
 
-      configurationDefaults = args: {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.backupFileExtension = "hm-backup";
-        home-manager.extraSpecialArgs = args;
-      };
+        (_final: prev: {
+          unstable = import nixpkgs-unstable {
+            inherit system config;
+          };
+        })
+      ];
+    };
 
-      argDefaults = {
-        inherit nix-secrets inputs self nix-index-database; #inherit secrets inputs self nix-index-database;
-        channels = {
-          inherit nixpkgs nixpkgs-unstable;
-        };
-      };
+    configurationDefaults = args: {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "hm-backup";
+      home-manager.extraSpecialArgs = args;
+    };
 
-      mkNixosConfiguration = {
-        system ? "x86_64-linux",
-        hostname,
-        username,
-        args ? {},
-        modules,
-      }: let
-        specialArgs = argDefaults // {inherit hostname username;} // args;
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit system specialArgs;
-          pkgs = nixpkgsWithOverlays system;
-          modules =
-            [
-              (configurationDefaults specialArgs)
-              home-manager.nixosModules.home-manager
-            ]
-            ++ modules;
-        };
-    in {
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
-
-      nixosConfigurations.cradix = mkNixosConfiguration {
-        hostname = "cradix";
-        username = "paz";
-        modules = [
-          nixos-wsl.nixosModules.wsl
-          sops-nix.nixosModules.sops
-          ./wsl.nix
-        ];
+    argDefaults = {
+      inherit 
+        #secrets
+        inputs 
+        self 
+        nix-index-database; 
+      channels = {
+        inherit nixpkgs nixpkgs-unstable;
       };
     };
+
+    mkNixosConfiguration = {
+      system ? "x86_64-linux",
+      hostname,
+      username,
+      winname,
+      args ? {},
+      modules,
+    }: let
+      specialArgs = argDefaults // { inherit hostname username winname; } // args;
+    in
+      nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
+        pkgs = nixpkgsWithOverlays system;
+        modules =
+          [
+            (configurationDefaults specialArgs)
+            home-manager.nixosModules.home-manager
+          ]
+          ++ modules;
+      };
+  in {
+    formatter.forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+
+    nixosConfigurations.cradix = mkNixosConfiguration {
+      hostname = "cradix";
+      username = "paz";
+      winname = "paz";
+      modules = [
+        inputs.nixos-wsl.nixosModules.wsl
+        inputs.sops-nix.nixosModules.sops
+        ./wsl.nix
+      ];
+    };
+  };
 }

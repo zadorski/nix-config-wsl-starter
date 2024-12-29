@@ -20,8 +20,6 @@
   # https://unmovedcentre.com/posts/secrets-management/
   inputs.sops-nix.url = "github:mic92/sops-nix";
   inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-  inputs.nix-secrets.url = "git+ssh://git@github.com/zadorski/nix-secrets.git?ref=main&shallow=1";  
-  inputs.nix-secrets.inputs = { };
 
   # https://github.com/ruslanguns/nixos-wsl-starter/blob/master/flake.nix
   outputs = {

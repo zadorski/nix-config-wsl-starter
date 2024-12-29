@@ -4,7 +4,6 @@
   nix-index-database,
   ...
 }: let
-  secretspath = builtins.toString nix-secrets;
   unstable-packages = with pkgs.unstable; [ # select your core binaries that you always want on the bleeding-edge    
     bat
     bottom
@@ -79,12 +78,6 @@ in {
     ++ unstable-packages
     ++    
     []; # you can add anything else that doesn't fit into the above two lists in here (e.g. pkgs.unstable.some-other-package)
-
-  sops = {
-    age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
-    defaultSopsFile = "${secretspath}/secrets.yaml";
-    validateSopsFiles = false;
-  };
 
   programs = {
     home-manager.enable = true;

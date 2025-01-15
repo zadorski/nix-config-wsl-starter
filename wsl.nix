@@ -1,4 +1,5 @@
 {
+  secrets,
   username,
   hostname,
   pkgs,

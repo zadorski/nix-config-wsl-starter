@@ -1,4 +1,5 @@
 {
+  secrets,
   pkgs,
   username,
   nix-index-database,
@@ -136,8 +137,8 @@ in {
         side-by-side = true;
         navigate = true;
       };
-      userEmail = ""; #FIXME: set your git email
-      userName = ""; #FIXME: set your git username
+      userEmail = "${secrets.git_email}";
+      userName = "${secrets.git_user}";
       extraConfig = {
         # url = {
         #   "https://oauth2:${secrets.github_token}@github.com" = {
@@ -168,7 +169,6 @@ in {
       # note that programs installed with `winget` are only symlinked to `%AppData%/Local/Microsoft/WinGet/Links`
       # if "Developer Mode" is enabled or if the command is run from an admin shell.
       # source:: https://github.com/microsoft/winget-cli/issues/3498
-      #fish_add_path --append /mnt/c/Users/[my-user]/AppData/Local/Microsoft/WinGet/Links #FIXME: <Your Windows Username>
       interactiveShellInit = ''
         ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
 
@@ -181,6 +181,7 @@ in {
           + "/extras/kanagawa.fish")}
 
         set -U fish_greeting        
+        fish_add_path --append /mnt/c/Users/${secrets.windows_home}/AppData/Local/Microsoft/WinGet/Links
       '';
       functions = {
         refresh = "source $HOME/.config/fish/config.fish";
@@ -227,7 +228,7 @@ in {
         pbcopy = "/mnt/c/Windows/System32/clip.exe";
         pbpaste = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'";
         explorer = "/mnt/c/Windows/explorer.exe";
-        #code = "/mnt/c/Users/[my-user]/AppData/Local/Programs/'Microsoft VS Code'/bin/code"; #FIXME
+        code = "/mnt/c/Users/${secrets.windows_home}/AppData/Local/Programs/'Microsoft VS Code'/bin/code";
       };
       plugins = [
         {

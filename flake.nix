@@ -82,8 +82,8 @@
     in {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
-      nixosConfigurations.crodax = mkNixosConfiguration {
-        hostname = "crodax";
+      nixosConfigurations.crobex = mkNixosConfiguration {
+        hostname = "crobex";
         username = "paz";
         modules = [
           nixos-wsl.nixosModules.wsl

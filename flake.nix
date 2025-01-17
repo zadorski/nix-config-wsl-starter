@@ -91,5 +91,15 @@
           ./wsl.nix
         ];
       };
+
+      nixosConfigurations.crodax = mkNixosConfiguration {
+        hostname = "crodax";
+        username = "paz";
+        modules = [
+          nixos-wsl.nixosModules.wsl
+          sops-nix.nixosModules.sops
+          ./wsl.nix
+        ];
+      };
     };
 }

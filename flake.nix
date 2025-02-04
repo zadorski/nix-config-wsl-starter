@@ -76,6 +76,11 @@
             [
               (configurationDefaults specialArgs)
               home-manager.nixosModules.home-manager
+              {
+                home-manager.sharedModules = [
+                  sops-nix.homeManagerModules.sops
+                ];
+              }
             ]
             ++ modules;
         };
@@ -87,7 +92,7 @@
         username = "paz";
         modules = [
           nixos-wsl.nixosModules.wsl
-          sops-nix.nixosModules.sops
+          sops-nix.nixosModules.sops # check home-manager.sharedModules for sops-nix in HM (ref:: https://github.com/nyxkrage/sanctureplicum/blob/main/flake.nix)
           ./wsl.nix
         ];
       };
